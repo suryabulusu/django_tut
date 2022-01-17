@@ -1,0 +1,52 @@
+{% extends base.html %}
+{% block title %}Login - Surveys{% endblock %}
+
+<!-- i suppose this form thing, and field in form -- it just comes from BaseLoginView
+when you said ,, login = LoginView.as_view() -- apne aap it ensures i suppose -->
+{% block content %}
+<div class = "ui center aligned basic very padded segment">
+    <h1 class = "ui header">
+        Login
+    </h1>
+    <div class = "ui container left aligned">
+        <!-- note the error thing, if you are sent back to this view with form, 
+            and it has form.error, then css should also have error word -->
+        <form class = "ui form {% if form.errors %}error{% endif %}" method = "post" novalidate>
+            {% csrf_token %}
+            {% for field in form %}
+            <div class = "field {% if form.errors %}error{% endif %}">
+                <label>{{ field.label_tag }}</label>
+                {{ field }}
+            </div>
+            {% endfor %}
+            <button type = "submit" class = "ui primary button">Submit</button>
+
+            <!-- lets also provide a signup button just in case -->
+            <!-- and this would actually ask the signup view; def signup(); -->
+            <a href = "{% url 'signup' %}">
+                <div class = "ui button">Sign Up</div>
+            </a>
+            
+            <!-- if the page receives a field with errors (usally afer post) -- log them here -->
+            <!-- obv when u land here first time, since there aren't any errors, nothing is printed -->
+            <div class = "ui message error">
+                <div class = "header">
+                    <!-- this should be like a header.. nice -->
+                    We had some issues
+                </div>
+                <ul class = "list">
+                    {% for field in form %}
+                        {% for error in field.errors %} 
+                        <li>{{ field.label_tag }} {{ error }}</li>
+                        {% endfor %} 
+                    {% endfor %}
+    
+                    {% for error in form.non_field_errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
